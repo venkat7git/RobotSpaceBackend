@@ -13,7 +13,7 @@ app.use(express.json())
 app.use(cors())
 
 
-app.post("/signUp",userController.signUp)
+app.post("/signup",userController.signup)
 app.post("/login",userController.login)
 
 

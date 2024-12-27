@@ -1,22 +1,20 @@
 const userDb = require("../user/userConnection")
-
-
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 
-exports.signUp = async (req,res)=>{
+exports.signup = async (req,res)=>{
     const { username, email, password } = req.body;
     try{
       let checkUser = await userDb.findOne({email})
       let checkUserName = await userDb.findOne({username})
       if(!checkUser && !checkUserName){
         const encrepterPassword = await bcrypt.hash(password,10);
-        checkUser = new userDb({ username, email, password:encrepterPassword, });
-        checkUser.save()
+        
+        await userDb.insertOne({username,email,password:encrepterPassword})
         res.send("success");
       }else{
-        res.send("User already exists")
+        res.status(404).send("User already exists")
       }
     }catch(err){
       res.status(500).send(`Server Error: ${err}` )
